@@ -6,4 +6,8 @@ class MapCity(models.Model):
     sigungu_en = models.CharField(db_column='sigungu_EN', max_length=200)  # Field name made lowercase.
     sigungu_kr = models.CharField(db_column='sigungu_KR', max_length=200)  # Field name made lowercase.
     geometry = models.GeometryField()
+    accumulation = models.IntegerField(default=0)
+    new = models.IntegerField(default=0)
+    CONTACT_HISTORY = models.JSONField(null=True, blank=True)
+    related_gu = models.JSONField(null=True, blank=True)
 
