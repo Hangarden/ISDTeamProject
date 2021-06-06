@@ -6,4 +6,4 @@ import numpy
 
 def create(request):
     res = check_air()
-    return render(request, 'example.html', context)
+    return render(request, 'example.html')
