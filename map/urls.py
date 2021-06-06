@@ -1,7 +1,9 @@
 from django.urls import path
 
-from map import views
+from . import views
 
 urlpatterns = [
-    path('', views.create_city, name = 'create_city'),
+    path('', views.CityList.as_view()),
+    path('<int:pk>/', views.CityDetail.as_view()),
 ]
+

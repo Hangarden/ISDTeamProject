@@ -4,6 +4,23 @@ from map.models import MapCity
 import json
 # Create your views here.
 
+from rest_framework import generics
+
+from .models import MapCity
+from .serializers import CitySerializer
+
+
+#ListCreateAPIView
+class CityList(generics.ListAPIView):
+    queryset = MapCity.objects.all()
+    serializer_class = CitySerializer
+
+
+#RetrieveUpdateDestroyAPIView
+class CityDetail(generics.RetrieveAPIView):
+    queryset = MapCity.objects.all()
+    serializer_class = CitySerializer
+
 
 def create_city(request):
     with open('./seoul.geojson') as json_file:
