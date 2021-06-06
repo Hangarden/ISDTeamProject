@@ -1,7 +1,9 @@
 from django.urls import path
 
-from map import views
+from . import views
+
+app_name = 'keywords'
 
 urlpatterns = [
-    path('', views.create_city, name = 'create_city'),
+    path('', views.index, name='index')
 ]

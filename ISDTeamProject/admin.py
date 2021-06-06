@@ -1,4 +1,4 @@
 from django.contrib import admin
-from map.models import City
+from map.models import MapCity
 
-admin.site.register(City)
+admin.site.register(MapCity)
