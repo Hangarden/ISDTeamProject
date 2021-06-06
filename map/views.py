@@ -14,3 +14,5 @@ def create_city(request):
             city = MapCity(sigungu_en= data['properties']['SIG_ENG_NM'], sigungu_kr=data['properties']['SIG_KOR_NM'], geometry=pnt)
             city.save()
     return render(request)
+
+
