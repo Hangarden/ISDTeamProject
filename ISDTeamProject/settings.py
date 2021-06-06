@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'map.apps.MapConfig',
     'keywords.apps.KeywordsConfig',
     'rest_framework',
+    'rest_framework_gis',
 ]
 
 MIDDLEWARE = [

@@ -1,7 +1,10 @@
 from django.shortcuts import render
 from django.contrib.gis.geos import GEOSGeometry
+from rest_framework_gis.pagination import GeoJsonPagination
 from map.models import MapCity
 import json
+from django.http import HttpResponse
+
 # Create your views here.
 
 from rest_framework import generics
@@ -9,15 +12,14 @@ from rest_framework import generics
 from .models import MapCity
 from .serializers import CitySerializer
 
-
 #ListCreateAPIView
 class CityList(generics.ListAPIView):
     queryset = MapCity.objects.all()
     serializer_class = CitySerializer
 
-
 #RetrieveUpdateDestroyAPIView
 class CityDetail(generics.RetrieveAPIView):
+    #ueryset = MapCity.objects.all()
     queryset = MapCity.objects.all()
     serializer_class = CitySerializer
 
