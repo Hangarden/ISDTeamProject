@@ -4,9 +4,6 @@ from .api import check_air
 import pandas
 import numpy
 
-def index(request):
+def create(request):
     res = check_air()
-    d = keyword(res)
-
-    context = {'pm10': 'pm10'}
     return render(request, 'example.html', context)
