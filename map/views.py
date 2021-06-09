@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.contrib.gis.geos import GEOSGeometry
 import json
 from django.db import connection
-
+from datetime import date
 # Create your views here.
 
 from rest_framework import generics
@@ -35,8 +35,14 @@ def create_city(request):
 
 def city_info(request):
     cities = MapCity.objects.all()
+    total_new = 0
+    total_accumulation = 0
+    for city in cities:
+        total_new = total_new + city.new
+        total_accumulation = total_accumulation + city.accumulation
     connection.close()
-    return render(request, 'map.html', {'cities': cities})
+    today = date.today()
+    return render(request, 'map.html', {'cities': cities, 'total_new': total_new, 'total_accumulation': total_accumulation, 'today': today.isoformat()})
 
 def city_detail(request,id):
     result = MapCity.objects.get(id=id)
