@@ -38,5 +38,5 @@ def create_city(request):
 def city_info(request):
     queryset = MapCity.objects.all()
     serializer_class = CitySerializer
-    return render(request, 'map_info.html')
+    return render(request, 'map.html')
 
