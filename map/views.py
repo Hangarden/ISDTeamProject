@@ -39,6 +39,7 @@ def city_info(request):
     return render(request, 'map.html', {'cities': cities})
 
 def city_detail(request,id):
+    cities = MapCity.objects.all()
     result = MapCity.objects.get(id=id)
     connection.close()
-    return render(request, 'map_detail.html', {'city': result})
+    return render(request, 'map_detail.html', {'city': result,'cities' : cities, 'id': id})
