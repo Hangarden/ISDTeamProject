@@ -45,37 +45,15 @@
                         Dropdown
                     </button>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
-                        <li><button class="dropdown-item" type="button">강남구</button></li>
-                        <li><button class="dropdown-item" type="button">강동구</button></li>
-                        <li><button class="dropdown-item" type="button">강북구</button></li>
-                        <li><button class="dropdown-item" type="button">강서구</button></li>
-                        <li><button class="dropdown-item" type="button">관악구</button></li>
-                        <li><button class="dropdown-item" type="button">광진구</button></li>
-                        <li><button class="dropdown-item" type="button">구로구</button></li>
-                        <li><button class="dropdown-item" type="button">금천구</button></li>
-                        <li><button class="dropdown-item" type="button">노원구</button></li>
-                        <li><button class="dropdown-item" type="button">도봉구</button></li>
-                        <li><button class="dropdown-item" type="button">동대문구</button></li>
-                        <li><button class="dropdown-item" type="button">동작구</button></li>
-                        <li><button class="dropdown-item" type="button">마포구</button></li>
-                        <li><button class="dropdown-item" type="button">서대문구</button></li>
-                        <li><button class="dropdown-item" type="button">서초구</button></li>
-                        <li><button class="dropdown-item" type="button">성동구</button></li>
-                        <li><button class="dropdown-item" type="button">송파구</button></li>
-                        <li><button class="dropdown-item" type="button">양천구</button></li>
-                        <li><button class="dropdown-item" type="button">영등포구</button></li>
-                        <li><button class="dropdown-item" type="button">용산구</button></li>
-                        <li><button class="dropdown-item" type="button">은평구</button></li>
-                        <li><button class="dropdown-item" type="button">종로구</button></li>
-                        <li><button class="dropdown-item" type="button">중구</button></li>
-                        <li><button class="dropdown-item" type="button">중랑구</button></li>
-
+                        {% for city in cities %}
+                            <a href="/map/city/{{ city.id }}"><li><button class="dropdown-item" type="button">{{ city.sigungu_kr }}</button></li></a>
+                        {% endfor %}
                     </ul>
                 </span>
             </div>
         </div>
-        <div class="col-8" style="background-color: aqua">
-            <div id='map' style='width: 900px; height: 300px;'></div>
+        <div class="col-8">
+            <div id='map' style='width:100%; height: 2000%;'></div>
             <div id="map">
             </div>
         </div>

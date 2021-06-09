@@ -3,6 +3,7 @@ from .api import check_air
 # from .api import tags
 import pandas
 import numpy
+from map.models import MapCity
 
 def create(request):
     res = check_air()
