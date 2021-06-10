@@ -4,7 +4,7 @@ from .api import *
 import pandas
 import numpy
 from map.models import MapCity
-
+from django.db import connection
 
 def create(request):
     related = related_json()
@@ -23,6 +23,7 @@ def create(request):
     post = MapCity.objects.all()
     rank = ranked_json()
     context = {'post': post, 'rank': rank}
+    connection.close()
     return render(request, 'example.html', context)
 
 

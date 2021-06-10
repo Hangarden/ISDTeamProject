@@ -5,6 +5,7 @@ from pandas import json_normalize
 import json
 import collections
 import itertools
+from django.db import connection
 
 
 # 관련구 json_data
