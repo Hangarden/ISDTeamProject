@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 from pathlib import Path
 import os
 
+
 if os.name == 'nt':
     import platform
     OSGEO4W = r"C:\OSGeo4W"

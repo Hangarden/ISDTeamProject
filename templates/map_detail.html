@@ -35,14 +35,14 @@
         </div>
     </div>
 </nav>
-<div class="container" style="margin-top: 5%">
+<div class="container">
     <div class="row">
         <div class="col">
             <div class="select-city">
                 <span>서울특별시</span>
                 <span class="dropdown">
                     <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-bs-toggle="dropdown" aria-expanded="false">
-                        종로구
+                        {{city.sigungu_kr}}
                     </button>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
                         {% for city in cities %}
@@ -58,12 +58,6 @@
             </div>
         </div>
     </div>
-    <div class="row">
-        <h6>기준일: {{ today }}</h6>
-        <h1></h1>
-        <h1>신규 확진자: {{ total_new }}</h1>
-        <h1>누적 확진자: {{ total_accumulation }}</h1>
-    </div>
 </div>
 <!-- Optional JavaScript; choose one of the two! -->
 
@@ -77,30 +71,25 @@
     zoom: 10, // starting zoom
     center: [127.00034, 37.55074] // starting center
   });
-  var hoveredStateId = null;
 
+var id = {{id}}
   map.on('load', function () {
-// Add a data source containing GeoJSON data.
-map.addSource('maine', {
-'type': 'geojson',
-'data': 'http://127.0.0.1:8000/map/api/?format=json'
-});
-
+      let link = 'http://127.0.0.1:8000/map/api/detail/' + id + '?format=json';
+          // Add a data source containing GeoJSON data.
+          map.addSource('maine', {
+              'type': 'geojson',
+              'data': link
+          });
 // Add a new layer to visualize the polygon.
 map.addLayer({
 'id': 'maine',
 'type': 'fill',
 'source': 'maine', // reference the data source
 'layout': {},
-    'paint': {
-        'fill-color': '#627BC1',
-        'fill-opacity': [
-            'case',
-            ['boolean', ['feature-state', 'hover'], false],
-            1,
-            0.5
-        ]
-    }
+'paint': {
+'fill-color': '#0080ff', // blue color fill
+'fill-opacity': 0.5
+}
 });
 // Add a black outline around the polygon.
 map.addLayer({
@@ -115,40 +104,6 @@ map.addLayer({
 });
 });
 
-  map.on('mousemove', 'maine', function (e) {
-      if (e.features.length > 0) {
-          if (hoveredStateId !== null) {
-              map.setFeatureState(
-                  { source: 'maine', id: hoveredStateId },
-                  { hover: false }
-              );
-          }
-          hoveredStateId = e.features[0].id;
-          map.setFeatureState(
-              { source: 'maine', id: hoveredStateId },
-              { hover: true }
-          );
-      }
-  });
-
-  // When the mouse leaves the state-fill layer, update the feature state of the
-  // previously hovered feature.
-  map.on('mouseleave', 'maine', function () {
-      if (hoveredStateId !== null) {
-          map.setFeatureState(
-              { source: 'maine', id: hoveredStateId },
-              { hover: false }
-          );
-      }
-      hoveredStateId = null;
-  });
-
-  map.on('click', 'maine', function (e) {
-      new mapboxgl.Popup()
-          .setLngLat(e.lngLat)
-          .setHTML(`<h1>${e.features[0].properties.sigungu_kr}</h1><p>신규 확진자: ${e.features[0].properties.new}</p><p>누적 확진자: ${e.features[0].properties.accumulation}</p>`)
-          .addTo(map);
-  });
 
 </script>
 <!-- Option 2: Separate Popper and Bootstrap JS -->

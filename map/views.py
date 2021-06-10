@@ -1,10 +1,8 @@
 from django.shortcuts import render
 from django.contrib.gis.geos import GEOSGeometry
-from rest_framework_gis.pagination import GeoJsonPagination
-from map.models import MapCity
 import json
-from django.http import HttpResponse
-
+from django.db import connection
+from datetime import date
 # Create your views here.
 
 from rest_framework import generics
@@ -36,7 +34,18 @@ def create_city(request):
 
 
 def city_info(request):
-    queryset = MapCity.objects.all()
-    serializer_class = CitySerializer
-    return render(request, 'map.html')
+    cities = MapCity.objects.all()
+    total_new = 0
+    total_accumulation = 0
+    for city in cities:
+        total_new = total_new + city.new
+        total_accumulation = total_accumulation + city.accumulation
+    connection.close()
+    today = date.today()
+    return render(request, 'map.html', {'cities': cities, 'total_new': total_new, 'total_accumulation': total_accumulation, 'today': today.isoformat()})
 
+def city_detail(request,id):
+    cities = MapCity.objects.all()
+    result = MapCity.objects.get(id=id)
+    connection.close()
+    return render(request, 'map_detail.html', {'city': result,'cities' : cities, 'id': id})
