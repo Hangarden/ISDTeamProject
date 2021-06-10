@@ -39,6 +39,7 @@ def city_info(request):
     cities = MapCity.objects.all()
     total_new = 0
     total_accumulation = 0
+    print(len(cities))
     for city in cities:
         total_new = total_new + city.new
         total_accumulation = total_accumulation + city.accumulation
