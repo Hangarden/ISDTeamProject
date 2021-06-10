@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .api import check_air
+from .api import *
 # from .api import tags
 import pandas
 import numpy

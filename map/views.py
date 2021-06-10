@@ -14,12 +14,14 @@ from .serializers import CitySerializer
 class CityList(generics.ListAPIView):
     queryset = MapCity.objects.all()
     serializer_class = CitySerializer
+    connection.close()
 
 #RetrieveUpdateDestroyAPIView
 class CityDetail(generics.RetrieveAPIView):
     #ueryset = MapCity.objects.all()
     queryset = MapCity.objects.all()
     serializer_class = CitySerializer
+    connection.close()
 
 
 def create_city(request):
