@@ -30,7 +30,7 @@ def update(request):
         city.CONTACT_HISTORY = rank[gu]
         city.save()
 
-    connection.close()
+    #connection.close()
     return JsonResponse({
         'status': 201,
         'message': 'update contact complete',

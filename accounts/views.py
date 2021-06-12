@@ -19,7 +19,7 @@ def signup(request):
             residence = Residence(user=user, city_id=city.id)
             residence.save()
             print(residence)
-            connection.close()
+            #connection.close()
         # 새로운 회원을 추가한다.
             auth.login(request, user)
         # 성공적으로 추가되면 바로 로그인시켜주고
@@ -44,7 +44,7 @@ def login(request):
         else:
             #회원정보가 존재하지 않는다면, 에러인자와 함께 login 템플릿으로 돌아가기.
             return render(request, 'login.html', {'error': 'username or password is incorrect.'})
-        connection.close()
+        #connection.close()
     else:
         return render(request, 'login.html')
 

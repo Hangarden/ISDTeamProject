@@ -21,14 +21,14 @@ from datetime import datetime
 class CityList(generics.ListAPIView):
     queryset = MapCity.objects.all()
     serializer_class = CitySerializer
-    connection.close()
+    #connection.close()
 
 
 # RetrieveUpdateDestroyAPIView
 class CityDetail(generics.RetrieveAPIView):
     queryset = MapCity.objects.all()
     serializer_class = CitySerializer
-    connection.close()
+    #connection.close()
 
 
 def create_city(request):
@@ -39,7 +39,7 @@ def create_city(request):
             pnt = GEOSGeometry(str(data['geometry']))
             city = MapCity(sigungu_en= data['properties']['SIG_ENG_NM'], sigungu_kr=data['properties']['SIG_KOR_NM'], geometry=pnt)
             city.save()
-            connection.close()
+            #connection.close()
     return render(request)
 
 
@@ -79,7 +79,7 @@ def update_count_status(request):
                 date=datetime.strptime(replaceDate, "%Y.%m.%d")
                 )
                 city_count_status.save()
-                connection.close()
+                #connection.close()
     return JsonResponse({
         'status': 201,
         'message': 'update CountStatus complete',
@@ -95,7 +95,7 @@ def city_info(request):
         for city in cities:
             total_new = total_new + city.new
             total_accumulation = total_accumulation + city.accumulation
-        connection.close()
+        #connection.close()
         today = date.today()
         return render(request, 'map.html', {'cities': cities, 'total_new': total_new, 'total_accumulation': total_accumulation, 'today': today.isoformat()})
     else:
@@ -105,7 +105,7 @@ def city_detail(request,id):
     cities = MapCity.objects.all()
     result = MapCity.objects.get(id=id)
     today = date.today()
-    connection.close()
+    #connection.close()
     center = result.geometry.centroid
     centerPnt = [float(center.ewkt.split(' ')[1].replace('(','')), float(center.ewkt.split(' ')[2].replace(')',''))]
     return render(request, 'map_detail.html', {'city': result,'cities' : cities, 'id': id, 'today': today, 'centerPnt': centerPnt})
