@@ -8,5 +8,6 @@ urlpatterns = [
     path('city/<int:id>', views.city_detail),
     path('api/', views.CityList.as_view()),
     path('api/detail/<int:pk>', views.CityDetail.as_view()),
+    path('api/updateCount', views.update_count_status)
 ]
 

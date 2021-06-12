@@ -51,7 +51,7 @@
                     </ul>
                 </span>
                 <span class="button">
-                    <a class = "btn btn-primary" href = "/keywords/update"> Update </a>
+                    <a class = "btn btn-primary" id="updateBtn"> Update </a>
                 </span>
             </div>
         </div>
@@ -72,7 +72,32 @@
 
 <!-- Option 1: Bootstrap Bundle with Popper -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
-<script>
+ <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+ <script>
+    $('#updateBtn').click(function(){
+        this.innerText= "Updating...";
+        $.ajax({
+            method: "GET",
+            url: "/map/api/updateCount",
+        })
+            .done(function( msg ) {
+                console.log(msg);
+                if (msg.status >= 200) {
+                    alert('Updated information on confirmed cases by region');
+                }
+            });
+        $.ajax({
+            method: "GET",
+            url: "/keywords/update",
+        })
+            .done(function( msg ) {
+                console.log(msg);
+                if (msg.status >= 200) {
+                    alert('Updated regional contact information.');
+                    document.getElementById('updateBtn').innerText = 'Updated';
+                }
+            });
+    });
   mapboxgl.accessToken = 'pk.eyJ1Ijoid29vcm9uZzk4IiwiYSI6ImNrcDdwd2JhczAwOTcydm5ycXc1NmJzYmwifQ.YfY42WARUgDouY_b6xP8RA';
   var map = new mapboxgl.Map({
     container: 'map',

@@ -1,3 +1,4 @@
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from .api import x_json, related_json, confirmed_json, all_json, ranked_json
 from map.models import MapCity
@@ -28,5 +29,8 @@ def update(request):
         city.CONTACT_HISTORY = rank[gu]
         city.save()
 
-    return redirect('list_maps')
+    return JsonResponse({
+        'status': 201,
+        'message': 'update contact complete',
+    }, json_dumps_params = {'ensure_ascii': True})
 
