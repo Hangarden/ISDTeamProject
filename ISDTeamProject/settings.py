@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 from pathlib import Path
 import os
 
+
 if os.name == 'nt':
     import platform
     OSGEO4W = r"C:\OSGeo4W"
@@ -23,6 +24,7 @@ if os.name == 'nt':
     os.environ['GDAL_DATA'] = OSGEO4W + r"\share\gdal"
     os.environ['PROJ_LIB'] = OSGEO4W + r"\share\proj"
     os.environ['PATH'] = OSGEO4W + r"\bin;" + os.environ['PATH']# Application definition
+
 
 
 
@@ -55,7 +57,6 @@ INSTALLED_APPS = [
     'keywords.apps.KeywordsConfig',
     'rest_framework',
     'rest_framework_gis',
-    'corsheaders',
 ]
 
 MIDDLEWARE = [
@@ -66,11 +67,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
-
 ]
-
-CORS_ORIGIN_WHITELIST = ['http://127.0.0.1:8000', 'http://localhost:8000']
 
 ROOT_URLCONF = 'ISDTeamProject.urls'
 
@@ -107,7 +104,7 @@ DATABASES = {
         'PORT': '3306',
         'OPTIONS': {
             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
-            #'charset': 'utf8mb4',
+            # 'charset': 'utf8mb4',
         },
     }
 }

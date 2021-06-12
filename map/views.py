@@ -3,6 +3,7 @@ from django.contrib.gis.geos import GEOSGeometry
 import json
 from django.db import connection
 from datetime import date
+import pandas as pd
 # Create your views here.
 
 from rest_framework import generics
