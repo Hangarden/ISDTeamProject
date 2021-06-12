@@ -15,6 +15,7 @@ class MapCity(models.Model):
 
 
 class CountStatus(models.Model):
+    id = models.BigAutoField(primary_key=True)
     city = models.ForeignKey(MapCity, on_delete=models.CASCADE)
     add = models.IntegerField(default=0)
     accumulation = models.IntegerField(default=0)
