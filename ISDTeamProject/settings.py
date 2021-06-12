@@ -57,7 +57,8 @@ INSTALLED_APPS = [
     'keywords.apps.KeywordsConfig',
     'rest_framework',
     'rest_framework_gis',
-    'corsheaders'
+    'corsheaders',
+    'accounts.apps.AccountsConfig'
 ]
 
 MIDDLEWARE = [
@@ -106,7 +107,7 @@ DATABASES = {
         'PORT': '3306',
         'OPTIONS': {
             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
-            'charset': 'utf8mb4',
+            #'charset': 'utf8mb4',
         },
     }
 }
