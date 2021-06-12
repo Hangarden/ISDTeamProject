@@ -43,7 +43,7 @@
                 <span>서울특별시</span>
                 <span class="dropdown">
                     <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-bs-toggle="dropdown" aria-expanded="false">
-                       전체구
+                       {{ city.sigungu_kr }}
                     </button>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
                         {% for city in cities %}
@@ -76,19 +76,20 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
 <script>
   mapboxgl.accessToken = 'pk.eyJ1Ijoid29vcm9uZzk4IiwiYSI6ImNrcDdwd2JhczAwOTcydm5ycXc1NmJzYmwifQ.YfY42WARUgDouY_b6xP8RA';
+  var centerPnt = {{centerPnt}}
   var map = new mapboxgl.Map({
     container: 'map',
     style: 'mapbox://styles/mapbox/streets-v11',
-    zoom: 10, // starting zoom
-    center: [127.00034, 37.55074] // starting center
+    zoom: 12, // starting zoom
+    center: [centerPnt[0], centerPnt[1]] // starting center
   });
   var hoveredStateId = null;
-
+  var id = {{id}}
   map.on('load', function () {
 // Add a data source containing GeoJSON data.
 map.addSource('maine', {
 'type': 'geojson',
-'data': 'http://127.0.0.1:8000/map/api/?format=json'
+'data': 'http://127.0.0.1:8000/map/api/detail/' + id + '?format=json'
 });
 
 // Add a new layer to visualize the polygon.
@@ -165,38 +166,34 @@ map.addLayer({
 
     const city_history = "{{ city.CONTACT_HISTORY }}".replace(/&#x27;/g, "\"");
     const city_related = "{{ city.related_gu }}".replace(/&#x27;/g, "\"");
+    const city_name = "{{ city.sigungu_kr }}".replace(/&#x27;/g, "\"");
     const related = JSON.parse(city_related);
     const history = JSON.parse(city_history);
 
-    console.log(Object.keys(related));
-    console.log(Object.values(history[0]['word']));
-    var x= history;
+    var x = history;
 
-    var name = [];
-    for (var i=0; i < 5; i++){
-        var his = x[i].word
-        name.push(his);
+    const contactWord = [];
+    const contactCount = [];
+    for(var i = 0; i<history.length; i++) {
+        if(i<5) {
+            contactWord.push(history[i].word);
+            contactCount.push(history[i].count);
+        } else if(i === 5) {
+            contactWord.push('etc');
+            contactCount.push(history[i].count)
+        } else {
+            contactCount[contactCount.length-1] = contactCount[contactCount.length-1]+history[i].count
+        }
     }
-    name.push('etc');
-
-    var count = [];
-    for (var i=0; i < 5; i++){
-        count.push(city_history[i].count)
-    }
-    var x = 0
-    for (var i=5; i < city_history.length; i++){
-        x += city[i].count
-    }
-    count.push(x)
 
     var ctx = document.getElementById('myChart');
     var myChart = new Chart(ctx, {
-        type: 'bar',
+        type: 'pie',
         data: {
-            labels: name,
+            labels: contactWord,
             datasets: [{
-                label: 'Top5 Contact History by {{ city.sigungu_KR }}',
-                data: count,
+                label: `Top5 Contact History by ${city_name}`,
+                data: contactCount,
                     backgroundColor:
                         [ 'rgba(255, 99, 132, 0.2)',
                             'rgba(54, 162, 235, 0.2)',
@@ -212,14 +209,8 @@ map.addLayer({
                         'rgba(255, 159, 64, 1)' ],
                     borderWidth: 1 }] },
             options: {
-                reponsive: false,
-                scales: {
-                    yAxes: [{
-                        ticks: {
-                            beginAtZero: true
-                        }
-                    }]
-                },
+                reponsive: true,
+
             } }); </script>
 
 <!-- Option 2: Separate Popper and Bootstrap JS -->
