@@ -1,13 +1,3 @@
-from urllib.parse import urlencode, unquote, quote_plus
-import requests
-import pandas as pd
-from pandas import json_normalize
-import json
-import collections
-import itertools
-
-
-# 관련구 json_data
 def x_json():
     url = "http://openapi.seoul.go.kr:8088/69527972426169723130316647617062/json/Corona19Status/1/1000"
     res = requests.get(url)
@@ -187,9 +177,23 @@ def ranked_json(covid):
         frequencies = x_df.Frequency.to_list()
 
         lists[city] = {}
+
         for i in range(len(words)):
-            if words[i] == '?':
+
+            match = re.search('[-,#/=_\+?:^$.@*\"※~&%ㆍ!1-9()IIIIIIIV|]', words[i])
+
+            if match:
+                words[i] = re.sub('[-,#/=_\+?:^$.@*\"※~&%ㆍ!1-9()IIIIIIIV|]', '', words[i])
+
+            if words[i] == '?' or words[i] == '' or words[i] == 'Ⅱ':
                 continue
             lists[city][words[i]] = frequencies[i]
 
-    return lists
+    cityObj = {}
+    for city in cities:
+        city_contact = []
+        for k, v in sorted(lists[city].items(), key=lambda item: item[1], reverse=True):
+            city_contact.append({'word': k, 'count': v})
+        cityObj[city] = city_contact
+
+    return cityObj
