@@ -84,17 +84,19 @@ def update_count_status(request):
 
 
 def city_info(request):
-    cities = MapCity.objects.all()
-    total_new = 0
-    total_accumulation = 0
-    print(len(cities))
-    for city in cities:
-        total_new = total_new + city.new
-        total_accumulation = total_accumulation + city.accumulation
-    connection.close()
-    today = date.today()
-    return render(request, 'map.html', {'cities': cities, 'total_new': total_new, 'total_accumulation': total_accumulation, 'today': today.isoformat()})
-
+    if request.user.is_authenticated:
+        cities = MapCity.objects.all()
+        total_new = 0
+        total_accumulation = 0
+        print(len(cities))
+        for city in cities:
+            total_new = total_new + city.new
+            total_accumulation = total_accumulation + city.accumulation
+        connection.close()
+        today = date.today()
+        return render(request, 'map.html', {'cities': cities, 'total_new': total_new, 'total_accumulation': total_accumulation, 'today': today.isoformat()})
+    else:
+        return render(request, 'login.html')
 
 def city_detail(request,id):
     cities = MapCity.objects.all()
