@@ -33,11 +33,12 @@ def login(request):
         username = request.POST['username']
         password = request.POST['password']
         user = auth.authenticate(request, username=username, password=password)
+        residence = Residence.objects.get(user=user)
         #입력받은 아이디와 비밀번호가 데이터베이스에 존재하는지 확인.
         if user is not None:
             #데이터 베이스에 회원정보가 존재한다면 로그인 시키고 home으로 돌아가기.
             auth.login(request, user)
-            return HttpResponseRedirect(reverse('list_maps'))
+            return HttpResponseRedirect("/map/city/{}".format(residence.city_id))
         else:
             #회원정보가 존재하지 않는다면, 에러인자와 함께 login 템플릿으로 돌아가기.
             return render(request, 'login.html', {'error': 'username or password is incorrect.'})
