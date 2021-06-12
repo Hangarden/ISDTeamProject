@@ -1,3 +1,13 @@
+import pandas as pd
+import numpy as np
+import sqlite3
+import requests
+import json
+from pandas import json_normalize
+import collections
+import itertools
+import re
+
 def x_json():
     url = "http://openapi.seoul.go.kr:8088/69527972426169723130316647617062/json/Corona19Status/1/1000"
     res = requests.get(url)
