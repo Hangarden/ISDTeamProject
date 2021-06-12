@@ -13,3 +13,9 @@ class MapCity(models.Model):
     CONTACT_HISTORY = models.JSONField(null=True, blank=True)
     related_gu = models.JSONField(null=True, blank=True)
 
+
+class CountStatus(models.Model):
+    city = models.ForeignKey(MapCity, on_delete=models.CASCADE)
+    add = models.IntegerField(default=0)
+    accumulation = models.IntegerField(default=0)
+    date = models.DateTimeField(auto_now_add=True)
