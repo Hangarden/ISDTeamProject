@@ -4,13 +4,14 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
     <!-- mapbox -->
     <script src='https://api.mapbox.com/mapbox-gl-js/v2.1.1/mapbox-gl.js'></script>
     <link href='https://api.mapbox.com/mapbox-gl-js/v2.1.1/mapbox-gl.css' rel='stylesheet' />
     <title>Map Info</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
 </head>
 <body>
  <!-- mapbox -->
@@ -44,14 +45,14 @@
         </div>
     </div>
 </nav>
-<div class="container">
+<div class="container" style="margin-top: 5%">
     <div class="row">
         <div class="col">
             <div class="select-city">
                 <span>서울특별시</span>
                 <span class="dropdown">
                     <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-bs-toggle="dropdown" aria-expanded="false">
-                        {{city.sigungu_kr}}
+                       {{ city.sigungu_kr }}
                     </button>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
                         {% for city in cities %}
@@ -67,38 +68,54 @@
             </div>
         </div>
     </div>
+    <div class="row">
+        <h6>기준일: {{ today }}</h6>
+        <h1></h1>
+        <h1>신규 확진자: {{ total_new }}</h1>
+        <h1>누적 확진자: {{ total_accumulation }}</h1>
+    </div>
 </div>
+
+ <div class="container" style="height: 450px;width: 450px;float: left; margin-left: 5%">
+     <canvas id="myChart"></canvas>
+ </div>
 <!-- Optional JavaScript; choose one of the two! -->
 
 <!-- Option 1: Bootstrap Bundle with Popper -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
 <script>
   mapboxgl.accessToken = 'pk.eyJ1Ijoid29vcm9uZzk4IiwiYSI6ImNrcDdwd2JhczAwOTcydm5ycXc1NmJzYmwifQ.YfY42WARUgDouY_b6xP8RA';
+  var centerPnt = {{centerPnt}}
   var map = new mapboxgl.Map({
     container: 'map',
     style: 'mapbox://styles/mapbox/streets-v11',
-    zoom: 10, // starting zoom
-    center: [127.00034, 37.55074] // starting center
+    zoom: 12, // starting zoom
+    center: [centerPnt[0], centerPnt[1]] // starting center
   });
-
-var id = {{id}}
+  var hoveredStateId = null;
+  var id = {{id}}
   map.on('load', function () {
-      let link = 'http://127.0.0.1:8000/map/api/detail/' + id + '?format=json';
-          // Add a data source containing GeoJSON data.
-          map.addSource('maine', {
-              'type': 'geojson',
-              'data': link
-          });
+// Add a data source containing GeoJSON data.
+map.addSource('maine', {
+'type': 'geojson',
+'data': 'http://127.0.0.1:8000/map/api/detail/' + id + '?format=json'
+});
+
 // Add a new layer to visualize the polygon.
 map.addLayer({
 'id': 'maine',
 'type': 'fill',
 'source': 'maine', // reference the data source
 'layout': {},
-'paint': {
-'fill-color': '#0080ff', // blue color fill
-'fill-opacity': 0.5
-}
+    'paint': {
+        'fill-color': '#627BC1',
+        'fill-opacity': [
+            'case',
+            ['boolean', ['feature-state', 'hover'], false],
+            1,
+            0.5
+        ]
+    }
 });
 // Add a black outline around the polygon.
 map.addLayer({
@@ -113,8 +130,98 @@ map.addLayer({
 });
 });
 
+  map.on('mousemove', 'maine', function (e) {
+      if (e.features.length > 0) {
+          if (hoveredStateId !== null) {
+              map.setFeatureState(
+                  { source: 'maine', id: hoveredStateId },
+                  { hover: false }
+              );
+          }
+          hoveredStateId = e.features[0].id;
+          map.setFeatureState(
+              { source: 'maine', id: hoveredStateId },
+              { hover: true }
+          );
+      }
+  });
+
+  // When the mouse leaves the state-fill layer, update the feature state of the
+  // previously hovered feature.
+  map.on('mouseleave', 'maine', function () {
+      if (hoveredStateId !== null) {
+          map.setFeatureState(
+              { source: 'maine', id: hoveredStateId },
+              { hover: false }
+          );
+      }
+      hoveredStateId = null;
+  });
+
+  map.on('click', 'maine', function (e) {
+      new mapboxgl.Popup()
+          .setLngLat(e.lngLat)
+          .setHTML(`<h1>${e.features[0].properties.sigungu_kr}</h1><p>신규 확진자: ${e.features[0].properties.new}</p><p>누적 확진자: ${e.features[0].properties.accumulation}</p>`)
+          .addTo(map);
+  });
 
 </script>
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+<script>
+
+    const city_history = "{{ city.CONTACT_HISTORY }}".replace(/&#x27;/g, "\"");
+    const city_related = "{{ city.related_gu }}".replace(/&#x27;/g, "\"");
+    const city_name = "{{ city.sigungu_kr }}".replace(/&#x27;/g, "\"");
+    const related = JSON.parse(city_related);
+    const history = JSON.parse(city_history);
+
+    var x = history;
+
+    const contactWord = [];
+    const contactCount = [];
+    for(var i = 0; i<history.length; i++) {
+        if(i<5) {
+            contactWord.push(history[i].word);
+            contactCount.push(history[i].count);
+        } else if(i === 5) {
+            contactWord.push('etc');
+            contactCount.push(history[i].count)
+        } else {
+            contactCount[contactCount.length-1] = contactCount[contactCount.length-1]+history[i].count
+        }
+    }
+
+    var ctx = document.getElementById('myChart');
+    var myChart = new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: contactWord,
+            datasets: [{
+                label: `Top5 Contact History by ${city_name}`,
+                data: contactCount,
+                    backgroundColor:
+                        [ 'rgba(255, 99, 132, 0.2)',
+                            'rgba(54, 162, 235, 0.2)',
+                            'rgba(255, 206, 86, 0.2)',
+                            'rgba(75, 192, 192, 0.2)',
+                            'rgba(153, 102, 255, 0.2)',
+                            'rgba(255, 159, 64, 0.2)' ],
+                    borderColor: [ 'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)' ],
+                    borderWidth: 1 }] },
+            options: {
+                reponsive: true,
+
+            } }); </script>
+
 <!-- Option 2: Separate Popper and Bootstrap JS -->
 <!--
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>

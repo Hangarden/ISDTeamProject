@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.contrib.gis.geos import GEOSGeometry
 from django.http import HttpResponse, JsonResponse
+from django.contrib.gis.db.models.functions import Centroid
 import json
 import requests
 from django.db import connection
@@ -100,5 +101,8 @@ def city_info(request):
 def city_detail(request,id):
     cities = MapCity.objects.all()
     result = MapCity.objects.get(id=id)
+    today = date.today()
     connection.close()
-    return render(request, 'map_detail.html', {'city': result,'cities' : cities, 'id': id})
+    center = result.geometry.centroid
+    centerPnt = [float(center.ewkt.split(' ')[1].replace('(','')), float(center.ewkt.split(' ')[2].replace(')',''))]
+    return render(request, 'map_detail.html', {'city': result,'cities' : cities, 'id': id, 'today': today, 'centerPnt': centerPnt})
