@@ -7,6 +7,7 @@ import requests
 from django.db import connection
 from datetime import date
 import pandas as pd
+from django.db import connection
 # Create your views here.
 
 from rest_framework import generics
@@ -38,6 +39,7 @@ def create_city(request):
             pnt = GEOSGeometry(str(data['geometry']))
             city = MapCity(sigungu_en= data['properties']['SIG_ENG_NM'], sigungu_kr=data['properties']['SIG_KOR_NM'], geometry=pnt)
             city.save()
+            connection.close()
     return render(request)
 
 
@@ -77,6 +79,7 @@ def update_count_status(request):
                 date=datetime.strptime(replaceDate, "%Y.%m.%d")
                 )
                 city_count_status.save()
+                connection.close()
     return JsonResponse({
         'status': 201,
         'message': 'update CountStatus complete',
