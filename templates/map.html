@@ -52,7 +52,7 @@
                     </button>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
                         {% for city in cities %}
-                            <a href="/map/city/{{ city.id }}"><li><button class="dropdown-item" type="button">{{ city.sigungu_kr }}</button></li></a>
+                            <a href="/city/{{ city.id }}"><li><button class="dropdown-item" type="button">{{ city.sigungu_kr }}</button></li></a>
                         {% endfor %}
                     </ul>
                 </span>
@@ -117,7 +117,7 @@
 // Add a data source containing GeoJSON data.
 map.addSource('maine', {
 'type': 'geojson',
-'data': 'http://127.0.0.1:8000/map/api/?format=json'
+'data': 'http://127.0.0.1:8000/api/?format=json'
 });
 
 // Add a new layer to visualize the polygon.

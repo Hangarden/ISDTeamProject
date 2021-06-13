@@ -25,7 +25,7 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link active" href="/map">Home</a>
+                    <a class="nav-link active" href="/">Home</a>
                 </li>
                 {% if user.is_authenticated %}
                 <li class="nav-item"></li>
@@ -68,8 +68,8 @@
     <div class="row">
         <h6>기준일: {{ today }}</h6>
         <h1></h1>
-        <h1>신규 확진자: {{ total_new }}</h1>
-        <h1>누적 확진자: {{ total_accumulation }}</h1>
+        <h1>신규 확진자: {{ city.new }}</h1>
+        <h1>누적 확진자: {{ city.accumulation }}</h1>
     </div>
 </div>
 
@@ -95,7 +95,7 @@
 // Add a data source containing GeoJSON data.
 map.addSource('maine', {
 'type': 'geojson',
-'data': 'http://127.0.0.1:8000/map/api/detail/' + id + '?format=json'
+'data': 'http://127.0.0.1:8000/api/detail/' + id + '?format=json'
 });
 
 // Add a new layer to visualize the polygon.
