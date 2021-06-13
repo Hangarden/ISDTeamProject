@@ -20,11 +20,11 @@ def signup(request):
             residence.save()
             print(residence)
             #connection.close()
-        # 새로운 회원을 추가한다.
+            # 새로운 회원을 추가한다.
             auth.login(request, user)
-        # 성공적으로 추가되면 바로 로그인시켜주고
-        # HttpResponseRedirect(reverse('detail_maps'),{'city': city,'cities' : cities, 'id': city.id})
-        return HttpResponseRedirect("/city/{}".format(city.id))
+            # 성공적으로 추가되면 바로 로그인시켜주고
+            # HttpResponseRedirect(reverse('detail_maps'),{'city': city,'cities' : cities, 'id': city.id})
+            return HttpResponseRedirect("/city/{}".format(city.id))
         # 홈으로 돌아가기.
     return render(request, 'signup.html', {'cities': cities})
 
