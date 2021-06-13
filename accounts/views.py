@@ -24,7 +24,7 @@ def signup(request):
             auth.login(request, user)
         # 성공적으로 추가되면 바로 로그인시켜주고
         # HttpResponseRedirect(reverse('detail_maps'),{'city': city,'cities' : cities, 'id': city.id})
-        return HttpResponseRedirect("/map/city/{}".format(city.id))
+        return HttpResponseRedirect("/city/{}".format(city.id))
         # 홈으로 돌아가기.
     return render(request, 'signup.html', {'cities': cities})
 
@@ -40,7 +40,7 @@ def login(request):
         if user is not None:
             #데이터 베이스에 회원정보가 존재한다면 로그인 시키고 home으로 돌아가기.
             auth.login(request, user)
-            return HttpResponseRedirect("/map/city/{}".format(residence.city_id))
+            return HttpResponseRedirect("/city/{}".format(residence.city_id))
         else:
             #회원정보가 존재하지 않는다면, 에러인자와 함께 login 템플릿으로 돌아가기.
             return render(request, 'login.html', {'error': 'username or password is incorrect.'})
