@@ -14,7 +14,11 @@
   </component>
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$" />
+<<<<<<< HEAD
     <orderEntry type="jdk" jdkName="Python 3.8 (ISDTeamProject)" jdkType="Python SDK" />
+=======
+    <orderEntry type="jdk" jdkName="Python 3.8 (base)" jdkType="Python SDK" />
+>>>>>>> 6861c08ad5558e9632185f23d70fe418b0d3f6ca
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
   <component name="TemplatesService">

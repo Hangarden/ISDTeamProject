@@ -13,12 +13,224 @@
     <title>Map Info</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
 </head>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+<script>
+    const city_history = "{{ city.CONTACT_HISTORY }}".replace(/&#x27;/g, "\"");
+    const city_related = "{{ city.related_gu }}".replace(/&#x27;/g, "\"");
+    const city_name = "{{ city.sigungu_kr }}".replace(/&#x27;/g, "\"");
+    const related = JSON.parse(city_related);
+    const history = JSON.parse(city_history);
+
+    const dates = "{{ dates }}".replace(/&#x27;/g, "\"");
+    console.log(JSON.parse((dates)))
+    const news = {{ news }};
+    console.log(news)
+    const accumulation = {{ accumulation }};
+
+
+    var x = history;
+
+    const contactWord = [];
+    const contactCount = [];
+    for(var i = 0; i<history.length; i++) {
+        if(i<5) {
+            contactWord.push(history[i].word);
+            contactCount.push(history[i].count);
+        } else if(i === 5) {
+            contactWord.push('etc');
+            contactCount.push(history[i].count)
+        } else {
+            contactCount[contactCount.length-1] = contactCount[contactCount.length-1]+history[i].count
+        }
+    }
+
+    $(function () {
+        var ctx = document.getElementById('chart1').getContext('2d');
+        var chart1 = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: contactWord,
+                datasets: [{
+                    label: `Top5 Contact History by ${city_name}`,
+                    data: contactCount,
+                    backgroundColor:
+                        ['rgba(255, 99, 132, 0.2)',
+                            'rgba(54, 162, 235, 0.2)',
+                            'rgba(255, 206, 86, 0.2)',
+                            'rgba(75, 192, 192, 0.2)',
+                            'rgba(153, 102, 255, 0.2)',
+                            'rgba(255, 159, 64, 0.2)'],
+                    borderColor: ['rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)'],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+
+            }
+        });
+
+
+        const city_related = "{{ city.related_gu }}".replace(/&#x27;/g, "\"");
+        const related = JSON.parse(city_related);
+
+
+        var sortable = [];
+        for (var city in related) {
+            sortable.push([city, related[city]]);
+        }
+        sortable.sort(function (a, b) {
+            return b[1] - a[1];
+        });
+
+        const x = [];
+        for (var i = 0; i < 5; i++) {
+            x.push(sortable[i][0])
+        }
+
+        const y = [];
+        for (var i = 0; i < 5; i++) {
+            y.push(sortable[i][1])
+        }
+
+        var ctx2 = document.getElementById('chart2').getContext('2d');
+        var chart2 = new Chart(ctx2, {
+            type: 'horizontalBar',
+            data: {
+                labels: x,
+                datasets: [{
+                    label: 'Top5 Related Gu by {{ city.sigungu_kr }}',
+                    data: y,
+                    backgroundColor:
+                        ['rgba(255, 99, 132, 0.2)',
+                            'rgba(54, 162, 235, 0.2)',
+                            'rgba(255, 206, 86, 0.2)',
+                            'rgba(75, 192, 192, 0.2)',
+                            'rgba(153, 102, 255, 0.2)',
+                            'rgba(255, 159, 64, 0.2)'],
+                    borderColor: ['rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)'],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }],
+                    xAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                },
+            }
+        });
+
+        var ctx3 = document.getElementById('chart3').getContext('2d');
+        var chart3 = new Chart(ctx3, {
+            type: 'bar',
+            data: {
+                labels: JSON.parse((dates)),
+                datasets: [{
+                    label: 'new confirmed case by {{ city.sigungu_kr }}',
+                    data: news,
+                    backgroundColor:
+                        ['rgba(255, 99, 132, 0.2)',
+                            'rgba(54, 162, 235, 0.2)',
+                            'rgba(255, 206, 86, 0.2)',
+                            'rgba(75, 192, 192, 0.2)',
+                            'rgba(153, 102, 255, 0.2)',
+                            'rgba(255, 159, 64, 0.2)'],
+                    borderColor: ['rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)'],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: false
+                        }
+                    }],
+                    xAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                },
+            }
+        });
+
+        var ctx4 = document.getElementById('chart4').getContext('2d');
+        var chart4 = new Chart(ctx4, {
+            type: 'line',
+            data: {
+                labels: JSON.parse((dates)),
+                datasets: [{
+                    label: 'accumulation confirmed case by {{ city.sigungu_kr }}',
+                    data: accumulation,
+                    backgroundColor:
+                        ['rgba(255, 99, 132, 0.2)',
+                            'rgba(54, 162, 235, 0.2)',
+                            'rgba(255, 206, 86, 0.2)',
+                            'rgba(75, 192, 192, 0.2)',
+                            'rgba(153, 102, 255, 0.2)',
+                            'rgba(255, 159, 64, 0.2)'],
+                    borderColor: ['rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)'],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: false
+                        }
+                    }],
+                    xAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                },
+            }
+        });
+    });
+
+     </script>
 <body>
  <!-- mapbox -->
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    {% csrf_token %}
     <div class="container-fluid">
-        <a class="navbar-brand" href="#">Covid-seoul</a>
+        <a class="navbar-brand">Covid-seoul</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -29,7 +241,7 @@
                 </li>
                 {% if user.is_authenticated %}
                 <li class="nav-item"></li>
-                    <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+                <a class="nav-link" href="{% url 'logout' %}">Logout</a>
                 {% else %}
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'login' %}">Login</a>
@@ -74,8 +286,13 @@
 </div>
 
  <div class="container" style="height: 450px;width: 450px;float: left; margin-left: 5%">
-     <canvas id="myChart"></canvas>
+     <canvas id="chart1"></canvas>
+     <canvas id="chart2"></canvas>
+     <canvas id="chart3"></canvas>
+     <canvas id="chart4"></canvas>
+
  </div>
+
 <!-- Optional JavaScript; choose one of the two! -->
 
 <!-- Option 1: Bootstrap Bundle with Popper -->
@@ -164,60 +381,12 @@ map.addLayer({
 
 </script>
 
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 
-<script>
 
-    const city_history = "{{ city.CONTACT_HISTORY }}".replace(/&#x27;/g, "\"");
-    const city_related = "{{ city.related_gu }}".replace(/&#x27;/g, "\"");
-    const city_name = "{{ city.sigungu_kr }}".replace(/&#x27;/g, "\"");
-    const related = JSON.parse(city_related);
-    const history = JSON.parse(city_history);
 
-    var x = history;
 
-    const contactWord = [];
-    const contactCount = [];
-    for(var i = 0; i<history.length; i++) {
-        if(i<5) {
-            contactWord.push(history[i].word);
-            contactCount.push(history[i].count);
-        } else if(i === 5) {
-            contactWord.push('etc');
-            contactCount.push(history[i].count)
-        } else {
-            contactCount[contactCount.length-1] = contactCount[contactCount.length-1]+history[i].count
-        }
-    }
 
-    var ctx = document.getElementById('myChart');
-    var myChart = new Chart(ctx, {
-        type: 'pie',
-        data: {
-            labels: contactWord,
-            datasets: [{
-                label: `Top5 Contact History by ${city_name}`,
-                data: contactCount,
-                    backgroundColor:
-                        [ 'rgba(255, 99, 132, 0.2)',
-                            'rgba(54, 162, 235, 0.2)',
-                            'rgba(255, 206, 86, 0.2)',
-                            'rgba(75, 192, 192, 0.2)',
-                            'rgba(153, 102, 255, 0.2)',
-                            'rgba(255, 159, 64, 0.2)' ],
-                    borderColor: [ 'rgba(255, 99, 132, 1)',
-                        'rgba(54, 162, 235, 1)',
-                        'rgba(255, 206, 86, 1)',
-                        'rgba(75, 192, 192, 1)',
-                        'rgba(153, 102, 255, 1)',
-                        'rgba(255, 159, 64, 1)' ],
-                    borderWidth: 1 }] },
-            options: {
-                reponsive: true,
 
-            } }); </script>
 
 <!-- Option 2: Separate Popper and Bootstrap JS -->
 <!--

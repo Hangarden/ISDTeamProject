@@ -105,7 +105,15 @@ def city_detail(request,id):
     cities = MapCity.objects.all()
     result = MapCity.objects.get(id=id)
     today = date.today()
-    #connection.close()
+    connection.close()
     center = result.geometry.centroid
     centerPnt = [float(center.ewkt.split(' ')[1].replace('(','')), float(center.ewkt.split(' ')[2].replace(')',''))]
-    return render(request, 'map_detail.html', {'city': result,'cities' : cities, 'id': id, 'today': today, 'centerPnt': centerPnt})
+    series = CountStatus.objects.filter(city_id = id)[:7]
+    dates = []
+    accu = []
+    new = []
+    for i in range(7):
+        dates.append(str(series[i].date)[5:10])
+        accu.append(series[i].accumulation)
+        new.append(series[i].add)
+    return render(request, 'map_detail.html', {'city': result,'cities' : cities, 'id': id, 'today': today, 'centerPnt': centerPnt, 'dates': dates, 'accumulation': accu, 'news': new})
