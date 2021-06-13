@@ -39,7 +39,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-ja10&ytr#&i&$s$(564(=a(geqzvc0m-78k9gh9^c!xd2cb^#-'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = bool( os.environ.get('DJANGO_DEBUG', True) )
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
@@ -96,6 +96,7 @@ WSGI_APPLICATION = 'ISDTeamProject.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
+
 
 DATABASES = {
     'default' : {
