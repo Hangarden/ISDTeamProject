@@ -107,7 +107,8 @@ DATABASES = {
         'HOST': 'database-1.c4bbsevvpyvs.ap-northeast-1.rds.amazonaws.com',
         'PORT': '3306',
         'OPTIONS': {
-            'init_command': "SET sql_mode='STRICT_TRANS_TABLES' AND 'SET default_storage_engine=INNODB'",
+            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+            'read_default_file': '/path/to/my.cnf',
             'charset': 'utf8mb4',
         },
     }
